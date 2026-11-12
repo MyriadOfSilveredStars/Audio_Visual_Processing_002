@@ -84,10 +84,6 @@ def demo(key):
         print("End of demo!")
         return False
 
-# Collect all event until released
-#model = run_machine()
-#weights = model.get_weights()
-
 print("Press ENTER to start recording")
 print("Press BACKSPACE to end demo")
 with Listener(on_press = demo) as listener:   

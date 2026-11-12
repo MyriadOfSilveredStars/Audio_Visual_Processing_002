@@ -35,6 +35,7 @@ def trim_name(name):
     return name
 
 def fetch_all_folders():
+    # RHO NEEDS TO CHANGE THIS TO NEW FILE STRUCTURE
     os.chdir("AVP_002")
     cwd = os.getcwd() + "/raw_data" #locate the "names" folder
 
