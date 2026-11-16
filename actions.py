@@ -22,6 +22,9 @@ from keras.models import Model, load_model
 
 from sklearn import metrics
 
+import cv2 as cv
+import skimage as skimg
+
 ## LOADING TEST DATA ##
 
 def trim_id(id):
@@ -43,6 +46,47 @@ def fetch_all_folders():
     #print(name_folders)
 
     return name_folders
+
+def fetch_all_videos():
+    os.chdir("test_data") #change this to the proper folder after testing
+    #for now, this simply runs through all the videos in one folder
+
+    test_videos = []
+    video_files = os.listdir(os.getcwd()) #get a list of all files
+
+    for video_name in video_files:
+        try:
+            video = cv.VideoCapture(video_name)
+            fps = video.get(cv.CAP_PROP_FPS)
+            frames = []
+
+            while video.isOpened():
+                ret, frm = video.read()
+
+                if not ret:
+                    break
+
+                frames.append(frm)
+                
+
+            video.release()
+            cv.destroyAllWindows()
+
+            video_dict = {
+                "name" : video_name,
+                "fps" : fps,
+                "frames" : frames
+            }
+            test_videos.append(video_dict)
+            print(video_dict["name"])
+
+        except:
+            print("Could not open video file...")
+
+    os.chdir("..")
+    return test_videos
+
+    
 
 def extract_test_audio(name_folders):
     test_audio = []
