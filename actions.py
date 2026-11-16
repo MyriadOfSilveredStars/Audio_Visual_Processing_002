@@ -68,7 +68,6 @@ def fetch_all_videos():
 
                 frames.append(frm)
                 
-
             video.release()
             cv.destroyAllWindows()
 
