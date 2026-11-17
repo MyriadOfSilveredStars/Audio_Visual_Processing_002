@@ -77,7 +77,7 @@ def fetch_all_videos():
                 "frames" : frames
             }
             test_videos.append(video_dict)
-            print(video_dict["name"])
+            #print(video_dict["name"])
 
         except:
             print("Could not open video file...")
@@ -86,7 +86,6 @@ def fetch_all_videos():
     return test_videos
 
     
-
 def extract_test_audio(name_folders):
     test_audio = []
 
@@ -142,7 +141,16 @@ def play_audio(r, fs):
     sd.play(r, fs)
     sd.wait() #wait until audio has finished playing
 
+def show_frame(frame_image):
+    plt.imshow(frame_image)
+    plt.show()
+
 ## PLOTTING GRAPHS ##
+
+def plot_pixel_histogram(image_file):
+    hist, bin_centers = skimg.exposure.histogram(image_file)
+    plt.plot(hist)
+    plt.show()
 
 def plot_multiple(x_axes):
     #input an array of x values to plot
@@ -204,6 +212,23 @@ def plot_confusion_matrix(model, X_test, y_test):
     cm_display = metrics.ConfusionMatrixDisplay(confusion_matrix = confusion_matrix)
     cm_display.plot()
     plt.show()
+
+## VISUAL PROCESSING ##
+
+def flip_rgb(frame):
+    #for some reason, the red and blue are inverted
+    #this makes it easy to flip them
+    img_bgr = cv.cvtColor(frame, cv.COLOR_RGB2BGR)
+
+    return img_bgr
+
+def mean_rgb(frame):
+    #920, 504 top left
+    #1060 584 bottom right
+    roi = frame[504:584, 920:1060, :] #lip coordinates...
+    roi_mean_rgb = (np.mean(roi[:, :, 0]), np.mean(roi[:, :, 1]), np.mean(roi[:, :, 2]))
+
+    print("Mean RGB of Lip Area: " + str(roi_mean_rgb))
 
 ## AUDIO PROCESSING ##
 
