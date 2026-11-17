@@ -222,13 +222,22 @@ def flip_rgb(frame):
 
     return img_bgr
 
-def mean_rgb(frame):
-    #920, 504 top left
-    #1060 584 bottom right
-    roi = frame[504:584, 920:1060, :] #lip coordinates...
+def mean_rgb(frame, y1, y2, x1, x2): #find the mean rgb value in a given rectangle of coordinates
+    #top left: (y1, x1)
+    #bottom right: (y2, x2)
+    roi = frame[y1:y2, x1:x2, :] #lip coordinates...
     roi_mean_rgb = (np.mean(roi[:, :, 0]), np.mean(roi[:, :, 1]), np.mean(roi[:, :, 2]))
 
     print("Mean RGB of Lip Area: " + str(roi_mean_rgb))
+
+    d_squares = (frame - roi_mean_rgb)**2
+    d_sum = d_squares[:, :, 0] + d_squares[:, :, 1] + d_squares[:, :, 2]
+    d = np.sqrt(d_sum)
+    thresh = np.std(d)
+    segmentation = d < thresh
+
+    plt.imshow(segmentation)
+    plt.show()
 
 ## AUDIO PROCESSING ##
 

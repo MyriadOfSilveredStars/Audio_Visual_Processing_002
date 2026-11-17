@@ -3,9 +3,9 @@
 Repository for the second AVP coursework.
 Contributors: Rho Bates and Esme Arthur-Aidoo
 
-Last Updated: 12th November, by Rho
+Last Updated: 17th November, by Rho
 
-To Do: organise files, check everything works, update actions.py with new image loading code from lab
+To Do: separate out the first batch of test data, and organise into files. Upload files to onedrive folder or something
 
 Uploaded from previous coursework:
 - The actions.py file contains every function required, from loading audio, producing graphs, processing MFCCs, and creating the model
