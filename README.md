@@ -3,9 +3,10 @@
 Repository for the second AVP coursework.
 Contributors: Rho Bates and Esme Arthur-Aidoo
 
-Last Updated: 17th November, by Rho
+Last Updated: 19th November, by Rho
+Changes: we can now get the image data from all the recorded videos. So far I have only split the Aaron and Alex videos, but we'll get there. 
 
-To Do: separate out the first batch of test data, and organise into files. Upload files to onedrive folder or something
+To Do: going to take a sniff at the lab and see what we can implement here
 
 Uploaded from previous coursework:
 - The actions.py file contains every function required, from loading audio, producing graphs, processing MFCCs, and creating the model
