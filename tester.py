@@ -3,9 +3,13 @@ from actions import *
 print("hello world!")
 
 #processing
-test = fetch_all_videos()
+folders = fetch_all_folders()
+print(folders)
+test = fetch_all_videos(folders)
+
 
 print(test[0]["name"])
+print(test[0]["id"])
 test_frame = test[0]["frames"][10]
 test_frame = flip_rgb(test_frame)
 

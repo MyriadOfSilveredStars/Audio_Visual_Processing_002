@@ -10,6 +10,7 @@ import os
 import pickle
 from scipy.signal import get_window
 import scipy.fftpack as fft
+import re
 
 from keras.utils import to_categorical
 from sklearn.preprocessing import LabelEncoder
@@ -37,52 +38,78 @@ def trim_name(name):
     name = name[0]
     return name
 
+def get_name_and_id(folder_name, video_name):
+    #extract the name and video id
+    #for classification
+
+    #the folder is in NAME_ID format
+    name_id = folder_name.split("_")
+    name = name_id[0]
+    id = name_id[1]
+
+    #then the video file name has the number
+    #file name NAME_clip00.webm format
+    num = re.findall(r'-?\d*\.?\d+', video_name) #extract digits
+    id = id + "_" + str(num[0])
+
+    return name, id
+
+
 def fetch_all_folders():
     # RHO NEEDS TO CHANGE THIS TO NEW FILE STRUCTURE
-    os.chdir("AVP_002")
-    cwd = os.getcwd() + "/raw_data" #locate the "names" folder
+    os.chdir("raw_data")
+    cwd = os.getcwd()
 
     name_folders = os.listdir(cwd) #get a list of all the folders
     #print(name_folders)
+    os.chdir("..") #always return to working directory afterwards
 
     return name_folders
 
-def fetch_all_videos():
-    os.chdir("test_data") #change this to the proper folder after testing
-    #for now, this simply runs through all the videos in one folder
+def fetch_all_videos(all_folders):
+    os.chdir("raw_data")# change directory to the data
 
     test_videos = []
-    video_files = os.listdir(os.getcwd()) #get a list of all files
 
-    for video_name in video_files:
-        try:
-            video = cv.VideoCapture(video_name)
-            fps = video.get(cv.CAP_PROP_FPS)
-            frames = []
+    for folder in all_folders:
+        os.chdir(folder) #go into that folder
+        video_files = os.listdir(os.getcwd()) #get a list of all files
 
-            while video.isOpened():
-                ret, frm = video.read()
+        for video_name in video_files:
+            try:
+                video = cv.VideoCapture(video_name)
+                fps = video.get(cv.CAP_PROP_FPS)
+                frames = []
 
-                if not ret:
-                    break
+                while video.isOpened():
+                    ret, frm = video.read()
 
-                frames.append(frm)
+                    if not ret:
+                        break
+
+                    frames.append(frm)
+                    
+                video.release()
+                cv.destroyAllWindows()
+
+                name, id = get_name_and_id(folder, video_name)
+
+                video_dict = {
+                    "id" : id,
+                    "name" : name,
+                    "fps" : fps,
+                    "frames" : frames
+                }
                 
-            video.release()
-            cv.destroyAllWindows()
+                test_videos.append(video_dict)
+                #print(video_dict["name"])
 
-            video_dict = {
-                "name" : video_name,
-                "fps" : fps,
-                "frames" : frames
-            }
-            test_videos.append(video_dict)
-            #print(video_dict["name"])
+            except:
+                print("Could not open video file...")
 
-        except:
-            print("Could not open video file...")
+        os.chdir("..") #back to all folders
 
-    os.chdir("..")
+    os.chdir("..") #back to working directory
     return test_videos
 
     
