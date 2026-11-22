@@ -102,7 +102,7 @@ def fetch_all_videos(all_folders):
                 }
                 
                 test_videos.append(video_dict)
-                #print(video_dict["name"])
+                print(video_dict["name"])
 
             except:
                 print("Could not open video file...")
@@ -265,6 +265,48 @@ def mean_rgb(frame, y1, y2, x1, x2): #find the mean rgb value in a given rectang
 
     plt.imshow(segmentation)
     plt.show()
+
+
+def mouth_locator(image):
+    # Convert the image to grayscale
+    image = cv.resize(image,(800,500))
+    gray = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
+
+    # Load the Haar cascade for mouth detection
+    mouth_cascade = cv.CascadeClassifier("haarcascade_mcs_mouth.xml")
+
+    # Detect the mouth in the image
+    mouths = mouth_cascade.detectMultiScale(image, scaleFactor=1.3, minNeighbors=5)
+
+    #draw a rectangle around each of the assumed mouths
+    #apparently this is BGR
+    blue = (255, 0, 0)
+    green = (0, 255, 0)
+    red = (0, 0, 255)
+
+    for mouth in mouths:
+        #mouths are typically in this coordinate region
+        if mouth[0] < 430 or mouth[0] > 370:
+            located_mouth = mouth
+        
+    #draw a rectangle over the located mouth
+    print(located_mouth)
+    x = located_mouth[0]
+    y = located_mouth[1]
+    w = 62
+    h = 37
+    cv.rectangle(image, (x, y), (x + w, y + h), red, 2)
+
+    just_mouth = image[y:y+h, x:x+w]
+    #just_mouth = flip_rgb(just_mouth)
+    #greyscale = cv.cvtColor(just_mouth, cv.COLOR_BGR2GRAY)
+
+    # Display the output image
+    #cv.imshow("Output", image)
+    #cv.waitKey(0)
+    #cv.destroyAllWindows()
+
+    return just_mouth
 
 ## AUDIO PROCESSING ##
 

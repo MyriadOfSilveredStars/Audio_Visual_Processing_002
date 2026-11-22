@@ -3,12 +3,38 @@
 Repository for the second AVP coursework.
 Contributors: Rho Bates and Esme Arthur-Aidoo
 
-Last Updated: 19th November, by Rho
-Changes: we can now get the image data from all the recorded videos. So far I have only split the Aaron and Alex videos, but we'll get there. 
+Last Updated: 22nd November, by Rho
+Changes: mouth locater locates mouths and sometimes other things. 
 
-To Do: going to take a sniff at the lab and see what we can implement here
+To Do:
+- rho to finesse mouth locator and implement box DCT extraction
+- esme to possibly develop zig-zag dct extraction, if understood. otherwise, working on poster
+
+CURRENT SOFTWARE:
+- Data recorded in .webm format
+- Data split manually into separate names
+- Each name video loaded as a series of frames
+- Audio to be split from video and saved as a separate file
+FOR VIDEO
+- CV's mouth cascade classifier used to locate mouth region in each frame
+- Find DCTs of each mouth region and label appropriately
+- Using DCTs, analyse mouth region movements and train model
+FOR AUDIO
+- Perform same processing as Coursework 001
+- Overlay noise to entire dataset to have one noisy and one clean dataset
+- Obtain MFCCs for each aduio file
+- Train model on noisy and clean data
+COMBINE
+- Late-stage integration
+- Experiment with weighting each model, until the highest accuracy is reached
+
 
 Uploaded from previous coursework:
-- The actions.py file contains every function required, from loading audio, producing graphs, processing MFCCs, and creating the model
-- The bench_demo.py file contains my bench_demo. You can run it to test the weights of my best model, which learned from both noisy and clean data
-- All code was specific to my file structure, but I'm hopefully working on getting it to work with this new file structure, as set out in this repository
+- Audio recogniser with 95% accuracy
+- Works with both noisy and clean data
+- Runs with 15 epochs, with batch sizes of 32
+- Has two Conv2D layers and runs with a learning rate of 0.001
+
+
+
+
