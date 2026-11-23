@@ -47,21 +47,27 @@ def shrink_to_mouth():
             do_dct(just_mouth)
 
 def do_dct(mouth):
-    #h, w, c = mouth.shape() #get height, width, and channels
+    #force grayscale
+    mouth_grey = cv2.cvtColor(mouth, cv2.COLOR_BGR2GRAY)
 
-    x = [200, 200, 50, 50]
-    X = dct_1d(x)
+    #convert to float32
+    mouth_conv = np.float32(mouth_grey)
 
-    print(f"X= {X}")
-    print("OpenCV:", cv.dct(np.float32(x).reshape(1, -1)).ravel())
+    #now do DCT
+    dct = cv2.dct(np.float32(mouth_conv)/255.0) #why doesn't this work then
 
-    # Apply 2D DCT to a floating-point type array
-    img_dct = cv.dct(np.float32(mouth))
-
-    # scale data for better visualisation
-    img_dct_log = np.log(np.abs(img_dct))
-    plt.imshow(img_dct_log, cmap="jet")
+    # reconstruct with inverse dct
+    img_new = cv2.idct(dct)
+    # plot the original image and the reconstructed version
+    fig, axes = plt.subplots(1, 2)
+    axes[0].imshow(mouth, cmap='gray')
+    axes[0].set_title("original image")
+    axes[1].imshow(img_new, cmap='gray')
+    axes[1].set_title("reconstructed version")
+    plt.tight_layout()
     plt.show()
+
+    #IT WORKS
 
 
 shrink_to_mouth()
