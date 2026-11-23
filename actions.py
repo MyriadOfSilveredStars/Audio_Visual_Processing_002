@@ -99,11 +99,12 @@ def fetch_all_videos(all_folders):
                     "id" : id,
                     "name" : name,
                     "fps" : fps,
-                    "frames" : frames
+                    "frames" : frames,
+                    "features" : []
                 }
                 
                 test_videos.append(video_dict)
-                print(video_dict["name"])
+                #print(video_dict["name"])
 
             except ValueError as e:
                 print("Could not open video file...")
@@ -269,7 +270,6 @@ def mean_rgb(frame, y1, y2, x1, x2): #find the mean rgb value in a given rectang
     plt.imshow(segmentation)
     plt.show()
 
-
 def mouth_locator(image):
     # Convert the image to a better size
     image = cv2.resize(image,(800,500))
@@ -292,7 +292,7 @@ def mouth_locator(image):
             located_mouth = mouth
         
     #draw a rectangle over the located mouth
-    print(located_mouth)
+    #print(located_mouth)
     x = located_mouth[0]
     y = located_mouth[1]
     w = 62
@@ -318,6 +318,7 @@ def read_zigzag(matrix):
     rows, columns = matrix.shape
 
     solution = [[] for i in range(rows+columns-1)]
+    ft_vector = []
 
     for i in range(rows):
         for j in range(columns):
@@ -326,17 +327,17 @@ def read_zigzag(matrix):
                 # add at beginning
                 solution[sum].insert(0, matrix[i][j])
             else:
-
                 # add at end of the list
                 solution[sum].append(matrix[i][j])
 
     #now return the finished zigzag
-    """
+    
+    #save as a single vector
     for i in solution:
         for j in i:
-            print(j, end=" ")
-    """
-    return solution
+            ft_vector.append(j)
+    
+    return ft_vector
 
 def whole_mouth_dct(mouth):
     #force grayscale
@@ -352,6 +353,19 @@ def whole_mouth_dct(mouth):
     feature_vector = split_lst[0]
 
     return feature_vector
+
+def cut_mouths(clip):
+    #locate the mouths in each frame of a clip
+    mouths = []
+    for frame in clip["frames"]:
+        #loop through frames of each clip
+        just_mouth = mouth_locator(frame)
+        just_mouth = flip_rgb(just_mouth)
+        
+        #show_frame(just_mouth)
+        mouths.append(just_mouth)
+
+    return mouths
 
 ## AUDIO PROCESSING ##
 
@@ -685,7 +699,6 @@ def the_machine(data, labels):
 
 
 ## MAIN CALLERS ##
-
 
 def process_data(audio_dict): #call this to process the data entirely
     #first set up some variables

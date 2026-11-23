@@ -4,7 +4,8 @@ Repository for the second AVP coursework.
 Contributors: Rho Bates and Esme Arthur-Aidoo
 
 Last Updated: 23rd November, by Rho
-Changes: got the buggering dct function to work
+Changes: got the buggering dct function to work, figured out that zigzag thing and now we have
+         features saved for the first four names. Which now I can try run a model on
 
 To Do:
 - rho to set up the skeleton of the learning model & extract audio from video
