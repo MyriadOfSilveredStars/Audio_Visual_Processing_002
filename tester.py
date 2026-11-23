@@ -50,11 +50,14 @@ def do_dct(mouth):
     #force grayscale
     mouth_grey = cv2.cvtColor(mouth, cv2.COLOR_BGR2GRAY)
 
-    #convert to float32
-    mouth_conv = np.float32(mouth_grey)
-
     #now do DCT
-    dct = cv2.dct(np.float32(mouth_conv)/255.0) #why doesn't this work then
+    dct = cv2.dct(np.float32(mouth_grey)) #why doesn't this work then
+
+    img_dct_log = np.log(np.abs(dct))
+    plt.imshow(img_dct_log, cmap="jet")
+    plt.show()
+
+    read_zigzag(dct)
 
     # reconstruct with inverse dct
     img_new = cv2.idct(dct)

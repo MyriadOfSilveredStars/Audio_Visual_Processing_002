@@ -311,6 +311,48 @@ def mouth_locator(image):
 
     return just_mouth
 
+def read_zigzag(matrix):
+    # program to read a matrix in a zig-zag
+    # code from https://www.geeksforgeeks.org/python/python-program-for-print-matrix-in-zag-zag-fashion/
+    
+    rows, columns = matrix.shape
+
+    solution = [[] for i in range(rows+columns-1)]
+
+    for i in range(rows):
+        for j in range(columns):
+            sum = i+j
+            if(sum % 2 == 0):
+                # add at beginning
+                solution[sum].insert(0, matrix[i][j])
+            else:
+
+                # add at end of the list
+                solution[sum].append(matrix[i][j])
+
+    #now return the finished zigzag
+    """
+    for i in solution:
+        for j in i:
+            print(j, end=" ")
+    """
+    return solution
+
+def whole_mouth_dct(mouth):
+    #force grayscale
+    mouth_grey = cv2.cvtColor(mouth, cv2.COLOR_BGR2GRAY)
+    
+    #now do DCT
+    dct = cv2.dct(np.float32(mouth_grey))
+
+    #now read in a zigzag
+    zigzag = read_zigzag(dct)
+    #and half for the feature vector
+    split_lst = np.array_split(zigzag, 2)
+    feature_vector = split_lst[0]
+
+    return feature_vector
+
 ## AUDIO PROCESSING ##
 
 def frame_audio(audio, fft_size, hop_size, fs):
