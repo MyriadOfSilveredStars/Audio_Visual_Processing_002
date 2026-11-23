@@ -3,11 +3,11 @@
 Repository for the second AVP coursework.
 Contributors: Rho Bates and Esme Arthur-Aidoo
 
-Last Updated: 22nd November, by Rho
-Changes: mouth locater locates mouths and sometimes other things. 
+Last Updated: 23rd November, by Rho
+Changes: got the buggering dct function to work
 
 To Do:
-- rho to finesse mouth locator and implement box DCT extraction
+- rho to set up the skeleton of the learning model & extract audio from video
 - esme to possibly develop zig-zag dct extraction, if understood. otherwise, working on poster
 
 CURRENT SOFTWARE:
