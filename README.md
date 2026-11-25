@@ -9,7 +9,7 @@ Changes: got the buggering dct function to work, figured out that zigzag thing a
 
 To Do:
 - rho to set up the skeleton of the learning model & extract audio from video
-- esme to possibly develop zig-zag dct extraction, if understood. otherwise, working on poster
+- esme working on poster & helping out with code when possible
 
 CURRENT SOFTWARE:
 - Data recorded in .webm format

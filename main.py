@@ -44,14 +44,18 @@ def process_data():
         # Each array contains a feature vector for the mouth
         # For each frame in the clip
         save_data(clip)
+
+def train_model():
+    print("Loading data...")
+
+    labels, data = handle_visual_features()
+    the_visual_machine(data, labels)
     
-
-
-
 def run_here():
     #process data by uncommenting this bit
-    process_data()
+    #process_data()
 
     #train model by uncommenting this bit
+    train_model()
 
 run_here()

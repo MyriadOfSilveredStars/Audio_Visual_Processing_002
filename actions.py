@@ -608,6 +608,28 @@ def create_model():
 
     return model
 
+def create_visual_model():
+    #create the model
+    numClasses = 4 #number of classes there are
+    model = Sequential()
+
+    #input layer
+    model.add(InputLayer(input_shape=(45, 1147, 1)))
+
+    #hidden decision layers
+    model.add(Conv2D(64, (3, 3), activation='relu'))
+    model.add(Conv2D(64, (3, 3), activation='relu'))
+
+    #converging decisions into one output
+    model.add(MaxPooling2D(pool_size=(3, 3)))
+    model.add(Flatten())
+    model.add(Dense(256))
+    model.add(Activation('relu'))
+    model.add(Dense(numClasses))
+    model.add(Activation('softmax')) #for multi-class classifiers
+
+    return model
+
 def find_most_frames(data):
     max_frames = 0
     for i in data:
@@ -615,6 +637,15 @@ def find_most_frames(data):
             num_frames = len(j)
             if num_frames > max_frames:
                 max_frames = num_frames
+
+    print(max_frames)
+
+def find_max_visual_frames(data):
+    max_frames = 0
+    for i in data:
+        num_frames = len(i)
+        if num_frames > max_frames:
+            max_frames = num_frames
 
     print(max_frames)
 
@@ -660,6 +691,76 @@ def handle_mfcc_files():
     #print(np.shape(data))
 
     return data, labels
+
+def handle_visual_features():
+    data = []
+    labels = []
+
+    os.chdir("visual_data")
+    all_vis_files = os.listdir(os.getcwd())
+    max_frames = 45 #note this is with the current data, will probably be more
+    empty_frames = np.zeros((1147)) #filler array
+
+    for vis_file in all_vis_files:
+        vis_data = unpickle_data(vis_file)
+        feature_data = vis_data["data"]
+        data_label = vis_data["label"]
+
+        #pad each frame to the set length
+        for i in range (0, len(feature_data)):
+            #print(len(feature_data[i]))
+            if len(feature_data[i]) < 1147:
+                needed = 1147 - len(feature_data[i])
+                feature_data[i] = np.pad(feature_data[i], (0, needed), "constant", constant_values=(0, 0))
+                #print(len(feature_data[i]))
+                
+        #pad each data to the max number of frames
+        while int(len(feature_data) < max_frames):
+            feature_data.append(empty_frames)
+
+        feature_data = np.squeeze(feature_data)
+        #print(np.shape(feature_data))
+        #final shape of each file should be (45, 1147) for now
+    
+        data.append(feature_data)
+        labels.append(data_label)
+
+    find_max_visual_frames(data)
+
+    labels = np.array(labels)
+    data = np.array(data)
+
+    os.chdir("..")
+    return labels, data
+
+def the_visual_machine(data, labels):
+    label_encoder = LabelEncoder()
+    classes = ['AARON', 'ALEX', 'ALI', 'HARRIET']#for testing purposes it's just 4 for now
+    label_encoder = label_encoder.fit(classes)
+    new_labels = to_categorical(label_encoder.transform(labels))
+
+    #split the data into 80% training, 10% validation, and 10% testing
+    X_train, X_tmp, y_train, y_tmp = train_test_split(data, new_labels, test_size=0.2, random_state=0)
+    #use the temp value to split the 20% into validation and test
+    X_val, X_test, y_val, y_test = train_test_split(X_tmp, y_tmp, test_size=0.5, random_state=0)
+
+    #now create the model
+    model = create_visual_model()
+    model.compile(loss='categorical_crossentropy', metrics=['accuracy'], optimizer=Adam(learning_rate=0.001))
+    model.summary()
+    
+    #set up the hyperparameters for the model
+    num_epochs = 15
+    num_batch_size = 32
+    
+    #and run the model...
+    history = model.fit(X_train, y_train, validation_data=(X_val, y_val), batch_size=num_batch_size, epochs=num_epochs, verbose=1)
+    #get accuracy
+    get_accuracy(model, X_test, y_test)
+    plot_confusion_matrix(model, X_test, y_test)
+
+    return history, model
+
 
 def the_machine(data, labels):
     #properly encode the labels, so they can be read by the machine
