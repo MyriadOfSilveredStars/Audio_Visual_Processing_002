@@ -3,12 +3,16 @@
 Repository for the second AVP coursework.
 Contributors: Rho Bates and Esme Arthur-Aidoo
 
-Last Updated: 23rd November, by Rho
-Changes: got the buggering dct function to work, figured out that zigzag thing and now we have
-         features saved for the first four names. Which now I can try run a model on
+Last Updated: 25th November, by Rho
+Changes: the model runs on the current feature vectors. Only works with four names so far, because I still need to process the other names, but we're getting 60% accuracy
 
 To Do:
-- rho to set up the skeleton of the learning model & extract audio from video
+- extract audio from visual
+- overlay noise to audio (?)
+- process all the names so the model runs with all 20
+- use late stage integration and configure weighting
+- all together now!!
+
 - esme working on poster & helping out with code when possible
 
 CURRENT SOFTWARE:
