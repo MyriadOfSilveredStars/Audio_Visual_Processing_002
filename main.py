@@ -34,16 +34,25 @@ def process_data():
         clip["frames"] = cut_mouths(clip) #cutting out the mouths from each clip
         #then we want to get the feature vectors for each frame
 
-        features = []
+        #within each frame, we want to split the mouth into equal chunks of 8
+        clip_features = []
         for frame in clip["frames"]:
-            dct_feature = whole_mouth_dct(frame)
-            features.append(dct_feature)
+            features = []
+            frame_blocks = split_into_blocks(frame)
 
-        clip["features"] = features 
+            for block in frame_blocks:
+                dct_feature = whole_mouth_dct(frame)
+                features.append(dct_feature)
+
+            print(np.shape(features))
+            clip_features.append(features)
+
+        print(np.shape(clip_features))
+        clip["features"] = clip_features 
         #so now, the clip["features"] has an array of arrays. 
         # Each array contains a feature vector for the mouth
         # For each frame in the clip
-        save_data(clip)
+        #save_data(clip)
 
 def train_model():
     print("Loading data...")
@@ -53,9 +62,9 @@ def train_model():
     
 def run_here():
     #process data by uncommenting this bit
-    #process_data()
+    process_data()
 
     #train model by uncommenting this bit
-    train_model()
+    #train_model()
 
 run_here()

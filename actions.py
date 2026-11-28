@@ -26,6 +26,7 @@ from sklearn import metrics
 import cv2
 import skimage as skimg
 
+
 ## LOADING TEST DATA ##
 
 def trim_id(id):
@@ -74,6 +75,8 @@ def fetch_all_videos(all_folders):
     for folder in all_folders:
         os.chdir(folder) #go into that folder
         video_files = os.listdir(os.getcwd()) #get a list of all files
+        print("Loading videos for " + folder)
+
 
         for video_name in video_files:
             try:
@@ -367,6 +370,19 @@ def cut_mouths(clip):
 
     return mouths
 
+def split_into_blocks(frame):
+    #code from https://www.askpython.com/python/examples/divide-image-blocks-extract-features
+    block_size = 8
+    blocks = []
+
+    for i in range(0, frame.shape[0], block_size):
+        for j in range(0, frame.shape[1], block_size):
+            #extract the block
+            block = frame[i:i+block_size, j:j+block_size]
+            blocks.append(block)
+
+    return blocks
+
 ## AUDIO PROCESSING ##
 
 def frame_audio(audio, fft_size, hop_size, fs):
@@ -610,11 +626,11 @@ def create_model():
 
 def create_visual_model():
     #create the model
-    numClasses = 4 #number of classes there are
+    numClasses = 20 #number of classes there are
     model = Sequential()
 
     #input layer
-    model.add(InputLayer(input_shape=(45, 1147, 1)))
+    model.add(InputLayer(input_shape=(52, 1147, 1)))
 
     #hidden decision layers
     model.add(Conv2D(64, (3, 3), activation='relu'))
@@ -698,13 +714,15 @@ def handle_visual_features():
 
     os.chdir("visual_data")
     all_vis_files = os.listdir(os.getcwd())
-    max_frames = 45 #note this is with the current data, will probably be more
+    max_frames = 52 #note this is with the current data, will probably be more
     empty_frames = np.zeros((1147)) #filler array
 
     for vis_file in all_vis_files:
         vis_data = unpickle_data(vis_file)
         feature_data = vis_data["data"]
         data_label = vis_data["label"]
+
+        #print(len(feature_data))
 
         #pad each frame to the set length
         for i in range (0, len(feature_data)):
@@ -735,7 +753,7 @@ def handle_visual_features():
 
 def the_visual_machine(data, labels):
     label_encoder = LabelEncoder()
-    classes = ['AARON', 'ALEX', 'ALI', 'HARRIET']#for testing purposes it's just 4 for now
+    classes = ['AARON', 'ALEX', 'ALI', 'CHARLIE', 'HARRIET', 'JACEK', 'JACK', 'JADE', 'JOSHUA', 'MASON', 'NATHAN', 'NICHOLAS', 'SAM', 'SAMUEL', 'SEAN', 'TOBY', 'TOMMY', 'XINGCHEN', 'ZIANG', 'ZIHAN']
     label_encoder = label_encoder.fit(classes)
     new_labels = to_categorical(label_encoder.transform(labels))
 

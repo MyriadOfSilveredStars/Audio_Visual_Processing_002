@@ -3,13 +3,13 @@
 Repository for the second AVP coursework.
 Contributors: Rho Bates and Esme Arthur-Aidoo
 
-Last Updated: 25th November, by Rho
-Changes: the model runs on the current feature vectors. Only works with four names so far, because I still need to process the other names, but we're getting 60% accuracy
+Last Updated: 28th November, by Rho
+Changes: the model runs with all twenty names. Current accuracy is 25%. I'm now working on getting the mouth frames to be split into chunks of 8x8, because that should increase accuracy. Like how the waveforms were split into frames when we did audio
 
 To Do:
+- get machine running with blocked data
 - extract audio from visual
 - overlay noise to audio (?)
-- process all the names so the model runs with all 20
 - use late stage integration and configure weighting
 - all together now!!
 
